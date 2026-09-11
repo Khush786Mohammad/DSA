@@ -1,0 +1,44 @@
+class Solution {
+    public int[] findPeakGrid(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+
+        int low = 0;
+        int high = row - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            int peakIdx = findMax(matrix[mid]);
+
+            boolean isPeak = true;
+            if (mid > 0) {
+                if (matrix[mid][peakIdx] < matrix[mid - 1][peakIdx])
+                    isPeak = false;
+            }
+            if (mid < row - 1 && isPeak) {
+                if (matrix[mid][peakIdx] < matrix[mid + 1][peakIdx])
+                    isPeak = false;
+            }
+            if (isPeak)
+                return new int[] { mid, peakIdx };
+            else if (mid > 0 && matrix[mid - 1][peakIdx] > matrix[mid][peakIdx])
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        return new int[] { 0, 0 };
+    }
+
+    private static int findMax(int[] arr) {
+        int n = arr.length;
+        int idx = 0;
+        int largest = arr[0];
+        for (int i = 1; i < n; i++) {
+            if (arr[i] > largest) {
+                largest = arr[i];
+                idx = i;
+            }
+        }
+        return idx;
+    }
+}
